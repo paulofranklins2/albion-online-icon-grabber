@@ -15,28 +15,27 @@ import java.util.List;
 import java.util.Set;
 
 public class APICrawler {
+    private static final String URL = "https://render.albiononline.com/v1/item/";
+    private static final String TYPE_NAMES_FILE = "src/main/resources/file_names.txt";
+    private static final String DOWNLOADED_FILE = "src/main/resources/file_downloaded.txt";
 
     public static void main(String[] args) {
-        String url = "https://render.albiononline.com/v1/item/";
-        String typeNamesFile = "src/main/resources/file_names.txt";
-        String downloadedFile = "src/main/resources/file_downloaded.txt";
-
-        int newDownloads = 0;
-        int skippedImages = 0;
-
         List<String> names;
         try {
-            names = Files.readAllLines(Paths.get(typeNamesFile));
+            names = Files.readAllLines(Paths.get(TYPE_NAMES_FILE));
         } catch (IOException e) {
-            System.err.println("Error reading file_names.txt file: " + e.getMessage());
+            System.err.println("Error reading harvest_names.txt file: " + e.getMessage());
             return;
         }
 
-        Set<String> savedImages = loadDownloadedImages(downloadedFile);
+        Set<String> savedImages = loadDownloadedImages();
 
         HttpClient httpClient = HttpClientBuilder.create().build();
+        int newDownloads = 0;
+        int skippedImages = 0;
+
         for (String name : names) {
-            String imageUrl = url + name + ".png?quality=1"; // Add ?quality=1 to the image URL
+            String imageUrl = URL + name + ".png?quality=1"; // Add ?quality=1 to the image URL
             String fileName = name + ".png";
 
             if (savedImages.contains(fileName)) {
@@ -71,15 +70,15 @@ public class APICrawler {
             }
         }
 
-        saveDownloadedImages(savedImages, downloadedFile);
+        saveDownloadedImages(savedImages);
 
         System.out.println("New downloads: " + newDownloads);
         System.out.println("Skipped images: " + skippedImages);
     }
 
-    private static Set<String> loadDownloadedImages(String downloadedFile) {
+    private static Set<String> loadDownloadedImages() {
         Set<String> savedImages = new HashSet<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(downloadedFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(DOWNLOADED_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 savedImages.add(line);
@@ -90,8 +89,8 @@ public class APICrawler {
         return savedImages;
     }
 
-    private static void saveDownloadedImages(Set<String> savedImages, String downloadedFile) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(downloadedFile, true))) {
+    private static void saveDownloadedImages(Set<String> savedImages) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(DOWNLOADED_FILE, true))) {
             for (String fileName : savedImages) {
                 writer.write(fileName);
                 writer.newLine();
