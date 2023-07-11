@@ -1,0 +1,55 @@
+# IntelliJ IDEA
+.idea/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Logs and databases
+*.log
+*.sqlite
+*.sql
+*.db
+
+# Build directories
+target/
+build/
+out/
+bin/
+
+# IDE-specific files
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+.vscode/
+
+# Mac specific files
+.DS_Store
+
+# Eclipse specific files
+.classpath
+.project
+.settings/
+
+# Maven specific files
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+mvnw
+mvnw.cmd
+
+# Ignore .png files
+*.png
